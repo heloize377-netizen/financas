@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Minhas Finanças</title>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="ic-overview" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="2" width="7" height="7" rx="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5"/>
+  </symbol>
+  <symbol id="ic-bank" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 7.5L10 3l8 4.5"/><rect x="3" y="7.5" width="2.5" height="6"/><rect x="8.75" y="7.5" width="2.5" height="6"/><rect x="14.5" y="7.5" width="2.5" height="6"/><path d="M2 16.5h16"/>
+  </symbol>
+  <symbol id="ic-chart" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="2,15 7,9 11,12 16,5"/><polyline points="13,5 16,5 16,8"/>
+  </symbol>
+  <symbol id="ic-target" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="10" cy="10" r="8"/><circle cx="10" cy="10" r="4"/><circle cx="10" cy="10" r="1" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-tx" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 3v14"/><path d="M5 7l5-4 5 4"/><path d="M5 13l5 4 5-4"/>
+  </symbol>
+  <symbol id="ic-up" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 12V4"/><path d="M4 7l4-4 4 4"/>
+  </symbol>
+  <symbol id="ic-down" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 4v8"/><path d="M4 9l4 4 4-4"/>
+  </symbol>
+  <symbol id="ic-spark" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 2l1.8 5.5H17l-4.3 3.1 1.6 5.4L10 13l-4.3 3 1.6-5.4L3 7.5h5.2z"/>
+  </symbol>
+  <symbol id="ic-add" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <path d="M10 4v12M4 10h12"/>
+  </symbol>
+</svg>
+<style>
+:root {
+  --pink: #C65F7B;
+  --pink-strong: #B94768;
+  --pink-light: #FCEAF0;
+  --pink-mid: #E7A9BA;
+  --bg: #F5F4F6;
+  --white: #FFFFFF;
+  --text: #18181B;
+  --text-mid: #52525B;
+  --text-soft: #A1A1AA;
+  --border: #E8E7EA;
+  --green: #2E9E75;
+  --green-light: #EDFAF4;
+  --amber: #C28A1A;
+  --amber-light: #FDF6E3;
+  --blue: #4D73D4;
+  --blue-light: #EEF2FD;
+  --red: #D45454;
+  --red-light: #FDEEEE;
+  --sidebar-w: 250px;
+  --r: 14px;
+  --r-sm: 9px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--white);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 14px 20px;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 50;
+  overflow-y: auto;
+}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0 6px 18px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 10px;
+}
+.brand-icon {
+  width: 38px; height: 38px;
+  background: var(--pink);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+.brand-text strong { display: block; font-size: 14px; font-weight: 700; }
+.brand-text span { font-size: 11px; color: var(--text-soft); }
+.nav-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 10px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  font-size: 14px; font-weight: 500;
+  color: var(--text-mid);
+  transition: background .12s, color .12s;
+  border: none; background: none; width: 100%; text-align: left;
+}
+.nav-item:hover { background: var(--bg); color: var(--text); }
+.nav-item.active { background: var(--pink-light); color: var(--pink); font-weight: 600; }
+.nav-icon { width: 18px; height: 18px; flex-shrink:0; }
+.nav-icon svg { width:18px; height:18px; display:block; }
+.sidebar-footer { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border); }
+
+/* MAIN */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  padding: 30px 28px 40px;
+  min-width: 0;
+}
+.page { display: none; }
+.page.active { display: block; }
+
+/* PAGE HEADER */
+.ph {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 24px; gap: 12px; flex-wrap: wrap;
+}
+.ph h1 { font-size: 24px; font-weight: 800; line-height: 1.2; }
+.ph p { font-size: 13px; color: var(--text-soft); margin-top: 3px; }
+
+/* BUTTONS */
+.btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 9px 17px; border-radius: 40px;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer; border: none;
+  transition: opacity .12s; font-family: inherit;
+}
+.btn:hover { opacity: .82; }
+.btn-primary { background: var(--pink); color: white; }
+.btn-outline { background: var(--white); color: var(--text); border: 1.5px solid var(--border); }
+.btn-sm { padding: 6px 13px; font-size: 12px; }
+
+/* STATS GRID */
+.stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 18px; }
+.sc {
+  background: var(--white); border-radius: var(--r); padding: 18px;
+  border: 1px solid var(--border);
+}
+.sc .label { font-size: 12px; color: var(--text-soft); margin-bottom: 5px; }
+.sc .value { font-size: 22px; font-weight: 800; line-height: 1; margin-bottom: 3px; }
+.sc .sub { font-size: 11px; color: var(--text-soft); }
+.sc.c-pink .value, .sc.c-green .value, .sc.c-amber .value, .sc.c-blue .value { color: var(--pink-strong); }
+
+/* HERO CARD */
+.hero {
+  background: linear-gradient(135deg, #FCEAF0 0%, #F8DFE7 100%);
+  color: #40232D; border: 1px solid #F0CCD7; border-radius: var(--r); padding: 24px 26px;
+  margin-bottom: 18px; position: relative; overflow: hidden;
+}
+.hero::before {
+  content:''; position:absolute; top:-60px; right:-40px;
+  width:200px; height:200px;
+  background: radial-gradient(circle, rgba(198,95,123,.17) 0%, transparent 70%);
+  border-radius:50%;
+}
+.hero::after {
+  content:''; position:absolute; bottom:-50px; left:30px;
+  width:160px; height:160px;
+  background: radial-gradient(circle, rgba(198,95,123,.10) 0%, transparent 70%);
+  border-radius:50%;
+}
+.hero .lbl { font-size: 11px; color: #895568; opacity: .95; letter-spacing:.06em; text-transform:uppercase; font-weight:700; }
+.hero .amt { font-size: 36px; font-weight: 800; margin: 8px 0 3px; line-height:1; }
+.hero .sub { font-size: 12px; color: #8E6875; opacity: 1; }
+.hero .row { display:flex; gap:24px; margin-top:18px; flex-wrap:wrap; padding-top:16px; border-top:1px solid rgba(137,85,104,.18); }
+.hero .row .itm .k { font-size:11px; color:#8E6875; margin-bottom:3px; }
+.hero .row .itm .v { font-size:15px; font-weight:700; color:#A94464; }
+
+/* SECTION */
+.sec {
+  background: var(--white); border-radius: var(--r); border: 1px solid var(--border);
+  padding: 20px; margin-bottom: 18px;
+}
+.sec-h {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom: 16px;
+}
+.sec-h h2 { font-size: 15px; font-weight: 700; }
+.sec-h .act { font-size: 13px; color: var(--pink); font-weight: 600; cursor:pointer; border:none; background:none; }
+
+/* BANK CARDS */
+.banks-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(185px,1fr)); gap: 11px; }
+.bc {
+  background: var(--bg); border-radius: var(--r-sm); padding: 15px;
+  border: 1.5px solid var(--border); position: relative;
+  transition: border-color .12s, box-shadow .12s;
+}
+.bc:hover { border-color: var(--pink-mid); box-shadow: 0 2px 12px rgba(232,85,122,.07); }
+.bc .bn { font-size: 12px; font-weight: 600; color: var(--text-mid); margin-bottom: 7px; }
+.bc .ba { font-size: 20px; font-weight: 800; }
+.bc .by { font-size: 11px; color: var(--green); font-weight: 600; margin-top: 3px; }
+.bc .badge {
+  position:absolute; top:10px; right:10px;
+  font-size:9px; font-weight:700; padding:2px 6px;
+  border-radius:20px; background:var(--green-light); color:var(--green);
+}
+.bc.add {
+  border-style: dashed; min-height:88px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:5px; color:var(--text-soft); font-size:13px; font-weight:500; cursor:pointer;
+}
+.bc.add:hover { border-color:var(--pink); color:var(--pink); }
+
+/* PROGRESS */
+.pb { height:5px; background:var(--border); border-radius:99px; overflow:hidden; }
+.pf { height:100%; background:var(--pink); border-radius:99px; transition:width .4s; }
+.pf.g { background:var(--green); }
+.pf.a { background:var(--amber); }
+
+/* GOAL ITEM */
+.gi { padding:13px 0; border-bottom:1px solid var(--border); }
+.gi:last-child { border-bottom:none; padding-bottom:0; }
+.gi-h { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:7px; }
+.gi-name { font-size:14px; font-weight:600; }
+.gi-meta { font-size:11px; color:var(--text-soft); margin-top:2px; }
+.gi-amt .cur { font-size:14px; font-weight:700; color:var(--pink); }
+.gi-amt .tot { font-size:11px; color:var(--text-soft); text-align:right; }
+
+/* TRANSACTION */
+.txi { display:flex; align-items:center; gap:11px; padding:11px 0; border-bottom:1px solid var(--border); }
+.txi:last-child { border-bottom:none; }
+.txi-icon { width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.txi-icon.in { background:var(--green-light); color:var(--green); }
+.txi-icon.out { background:var(--red-light); color:var(--red); }
+.txi-icon svg { width:16px; height:16px; }
+.txi-body { flex:1; min-width:0; }
+.txi-body .nm { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.txi-body .mt { font-size:11px; color:var(--text-soft); }
+.txi-amt { font-size:14px; font-weight:700; flex-shrink:0; }
+.txi-amt.in { color:var(--green); }
+.txi-amt.out { color:var(--red); }
+
+/* AI BOX */
+.ai-box {
+  background:var(--white); border:1.5px solid var(--border);
+  border-radius:var(--r); padding:18px; margin-bottom:18px;
+}
+.ai-h { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+.ai-badge {
+  background:var(--pink-light); color:var(--pink);
+  font-size:10px; font-weight:700; padding:2px 7px; border-radius:20px;
+}
+.ai-txt { font-size:13px; color:var(--text-mid); line-height:1.6; }
+.dots span {
+  display:inline-block; width:5px; height:5px;
+  border-radius:50%; background:var(--pink); margin:0 1px;
+  animation:bop 1.2s infinite;
+}
+.dots span:nth-child(2){animation-delay:.2s}
+.dots span:nth-child(3){animation-delay:.4s}
+@keyframes bop{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-5px)}}
+
+/* CHART BARS */
+.chart-wrap { display:flex; align-items:flex-end; gap:7px; height:110px; padding-top:8px; }
+.bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; height:100%; }
+.bar-w { width:100%; flex:1; display:flex; align-items:flex-end; }
+.bar { width:100%; border-radius:5px 5px 0 0; min-height:3px; cursor:default; }
+.bar.real { background:var(--pink); }
+.bar.proj { background:var(--pink-mid); }
+.bar-lbl { font-size:10px; color:var(--text-soft); flex-shrink:0; }
+
+/* MODAL */
+.overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.3); z-index:200; align-items:center; justify-content:center; padding:16px; }
+.overlay.open { display:flex; }
+.modal { background:var(--white); border-radius:18px; padding:24px; width:100%; max-width:400px; box-shadow:0 20px 50px rgba(0,0,0,.12); }
+.modal h3 { font-size:17px; font-weight:800; margin-bottom:18px; }
+.mcls { float:right; background:none; border:none; font-size:20px; cursor:pointer; color:var(--text-soft); margin-top:-3px; }
+.fg { margin-bottom:13px; }
+.fg label { display:block; font-size:11px; font-weight:600; color:var(--text-mid); margin-bottom:5px; text-transform:uppercase; letter-spacing:.04em; }
+.fg input, .fg select {
+  width:100%; padding:9px 12px; border-radius:var(--r-sm);
+  border:1.5px solid var(--border); font-size:13px;
+  font-family:inherit; color:var(--text); background:var(--bg);
+  outline:none; transition:border-color .12s;
+}
+.fg input:focus,.fg select:focus { border-color:var(--pink); }
+.ma { display:flex; gap:9px; margin-top:18px; }
+.ma .btn { flex:1; justify-content:center; }
+
+/* TAB BAR (mobile) */
+.tab-bar {
+  display:none; position:fixed; bottom:0; left:0; right:0;
+  background:var(--white); border-top:1px solid var(--border);
+  padding:6px 0; padding-bottom:max(6px, env(safe-area-inset-bottom));
+  z-index:50; justify-content:space-around;
+}
+.tab-btn {
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  font-size:10px; font-weight:500; color:var(--text-soft);
+  cursor:pointer; border:none; background:none; padding:3px 10px;
+  transition:color .12s;
+}
+.tab-btn .ti { font-size:19px; }
+.tab-btn.active { color:var(--pink); }
+.ti-svg { width:20px; height:20px; display:block; }
+
+/* LOCAL DATA / BACKUP */
+.data-tools { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin:0 0 18px; }
+.save-status { color:var(--text-soft); font-size:11px; }
+.data-actions { display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+.data-actions .btn { padding:7px 11px; font-size:11px; }
+.file-hidden { display:none; }
+.bc-actions,.tx-actions,.gi-actions { display:flex; align-items:center; gap:5px; margin-top:9px; }
+.mini-btn { border:1px solid var(--border); background:#fff; color:var(--text-mid); border-radius:7px; padding:5px 8px; font:600 10px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; cursor:pointer; }
+.mini-btn:hover { border-color:var(--pink-mid); color:var(--pink-strong); background:var(--pink-light); }
+.mini-btn.danger:hover { color:var(--red); border-color:#F0C4C4; background:var(--red-light); }
+.txi { min-width:0; }
+.txi-body { min-width:0; }
+.gi-actions { margin-top:8px; }
+@media(max-width:768px){ .data-tools { align-items:flex-start; margin-bottom:15px; } .data-actions { width:100%; } .data-actions .btn { flex:1; justify-content:center; } .save-status { font-size:10px; } .tx-actions { gap:3px; } .mini-btn { padding:5px 6px; } }
+
+/* EMPTY */
+.empty { text-align:center; padding:32px 12px; color:var(--text-soft); }
+.empty .ei { font-size:28px; margin-bottom:8px; opacity:.4; }
+.empty p { font-size:13px; }
+
+/* DIST BAR */
+.dist-item { margin-bottom:12px; }
+.dist-item:last-child { margin-bottom:0; }
+.dist-row { display:flex; justify-content:space-between; margin-bottom:4px; font-size:13px; }
+.dist-row .dn { font-weight:600; }
+.dist-row .dv { color:var(--text-soft); }
+
+/* LEGEND */
+.legend { display:flex; gap:14px; margin-top:10px; }
+.leg-item { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text-soft); }
+.leg-dot { width:9px; height:9px; border-radius:2px; }
+
+/* YIELD TABLE */
+.yt-item { display:flex; align-items:center; gap:11px; padding:11px 0; border-bottom:1px solid var(--border); }
+.yt-item:last-child { border-bottom:none; }
+.yt-body { flex:1; }
+.yt-body .yn { font-size:13px; font-weight:600; }
+.yt-body .ym { font-size:11px; color:var(--text-soft); }
+.yt-right .v1 { font-size:14px; font-weight:700; color:var(--green); text-align:right; }
+.yt-right .v2 { font-size:11px; color:var(--text-soft); text-align:right; }
+
+/* MOBILE */
+@media(max-width:768px){
+  body { flex-direction:column; }
+  .sidebar { display:none; }
+  .main { margin-left:0; padding:18px 14px 88px; }
+  .tab-bar { display:flex; }
+  .stats { grid-template-columns:repeat(2,1fr); gap:9px; }
+  .ph h1 { font-size:20px; }
+  .hero .amt { font-size:28px; }
+}
+@media(max-width:380px){
+  .sc .value { font-size:19px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="brand">
+    <div class="brand-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h14"/><path d="M3 6h14"/><path d="M3 14h8"/></svg></div>
+    <div class="brand-text">
+      <strong>Minhas Finanças</strong>
+      <span>Painel financeiro</span>
+    </div>
+  </div>
+  <button class="nav-item active" onclick="goTo('visao')"><span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="7" height="7" rx="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5"/></svg></span> Visão geral</button>
+  <button class="nav-item" onclick="goTo('bancos')"><span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7.5L10 3l8 4.5"/><rect x="3" y="7.5" width="2.5" height="6"/><rect x="8.75" y="7.5" width="2.5" height="6"/><rect x="14.5" y="7.5" width="2.5" height="6"/><path d="M2 16.5h16"/></svg></span> Bancos</button>
+  <button class="nav-item" onclick="goTo('projecoes')"><span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,15 7,9 11,12 16,5"/><polyline points="13,5 16,5 16,8"/></svg></span> Projeções</button>
+  <button class="nav-item" onclick="goTo('metas')"><span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8"/><circle cx="10" cy="10" r="4"/><circle cx="10" cy="10" r="1.2" fill="currentColor" stroke="none"/></svg></span> Metas</button>
+  <button class="nav-item" onclick="goTo('movimentos')"><span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3v14"/><path d="M5 7l5-4 5 4"/><path d="M5 13l5 4 5-4"/></svg></span> Movimentos</button>
+  <div class="sidebar-footer">
+    <button class="btn btn-primary" style="width:100%;justify-content:center;gap:6px;" onclick="openModal('m-tx')"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><path d="M10 4v12M4 10h12"/></svg> Lançar</button>
+  </div>
+</nav>
+
+<main class="main">
+  <div class="data-tools" aria-label="Armazenamento e backup">
+    <span id="save-status" class="save-status" role="status">Carregando dados salvos…</span>
+    <div class="data-actions">
+      <button class="btn btn-outline" type="button" onclick="exportBackup()">Baixar backup</button>
+      <button class="btn btn-outline" type="button" onclick="document.getElementById('backup-file').click()">Restaurar backup</button>
+      <input class="file-hidden" id="backup-file" type="file" accept="application/json,.json" onchange="importBackup(event)">
+    </div>
+  </div>
+
+  <!-- VISÃO GERAL -->
+  <div class="page active" id="page-visao">
+    <div class="ph">
+      <div><h1>Visão geral</h1><p>Acompanhe patrimônio, entradas e saídas.</p></div>
+      <button class="btn btn-primary" onclick="openModal('m-tx')" style="gap:6px"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round"><path d="M10 4v12M4 10h12"/></svg> Lançar</button>
+    </div>
+
+    <div class="hero">
+      <div class="lbl">Patrimônio total</div>
+      <div class="amt" id="h-pat">R$ 0,00</div>
+      <div class="sub">em todos os bancos</div>
+      <div class="row">
+        <div class="itm"><div class="k">Entradas (mês)</div><div class="v" id="h-in">R$ 0,00</div></div>
+        <div class="itm"><div class="k">Saídas (mês)</div><div class="v" id="h-out">R$ 0,00</div></div>
+        <div class="itm"><div class="k">Saldo (mês)</div><div class="v" id="h-sal">R$ 0,00</div></div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="sc c-pink"><div class="label">Bancos</div><div class="value" id="s-bancos">0</div><div class="sub">contas</div></div>
+      <div class="sc c-green"><div class="label">Rendimento/mês</div><div class="value" id="s-rend">R$ 0</div><div class="sub">projetado</div></div>
+      <div class="sc c-amber"><div class="label">Metas</div><div class="value" id="s-metas">0</div><div class="sub">em andamento</div></div>
+      <div class="sc c-blue"><div class="label">Taxa poupança</div><div class="value" id="s-poup">0%</div><div class="sub">este mês</div></div>
+    </div>
+
+    <div class="ai-box">
+      <div class="ai-h"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="var(--pink)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2l1.8 5.5H17l-4.3 3.1 1.6 5.4L10 13l-4.3 3 1.6-5.4L3 7.5h5.2z"/></svg><span class="ai-badge">Sugestão inteligente</span></div>
+      <div id="ai-home"><div style="display:flex;align-items:center;gap:8px;color:var(--text-soft);font-size:13px"><div class="dots"><span></span><span></span><span></span></div>Analisando seus dados…</div></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><h2>Últimos lançamentos</h2><button class="act" onclick="goTo('movimentos')">Ver todos</button></div>
+      <div id="tx-home"></div>
+    </div>
+  </div>
+
+  <!-- BANCOS -->
+  <div class="page" id="page-bancos">
+    <div class="ph">
+      <div><h1>Bancos</h1><p>Saldos e rendimentos por conta.</p></div>
+      <button class="btn btn-primary" onclick="openModal('m-banco')">+ Novo banco</button>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><h2>Suas contas</h2></div>
+      <div class="banks-grid" id="banks-grid"></div>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><h2>Distribuição</h2></div>
+      <div id="bank-dist"></div>
+    </div>
+  </div>
+
+  <!-- PROJEÇÕES -->
+  <div class="page" id="page-projecoes">
+    <div class="ph">
+      <div><h1>Projeções</h1><p>Faturamento e crescimento do patrimônio.</p></div>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><h2>Entradas — histórico e projeção</h2></div>
+      <div class="chart-wrap" id="chart"></div>
+      <div class="legend">
+        <div class="leg-item"><div class="leg-dot" style="background:var(--pink)"></div>Real</div>
+        <div class="leg-item"><div class="leg-dot" style="background:var(--pink-mid)"></div>Projetado</div>
+      </div>
+    </div>
+    <div class="ai-box">
+      <div class="ai-h"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="var(--pink)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2l1.8 5.5H17l-4.3 3.1 1.6 5.4L10 13l-4.3 3 1.6-5.4L3 7.5h5.2z"/></svg><span class="ai-badge">Análise de projeção</span></div>
+      <div id="ai-proj"><div style="display:flex;align-items:center;gap:8px;color:var(--text-soft);font-size:13px"><div class="dots"><span></span><span></span><span></span></div>Calculando…</div></div>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><h2>Rendimento por banco</h2></div>
+      <div id="yield-list"></div>
+    </div>
+  </div>
+
+  <!-- METAS -->
+  <div class="page" id="page-metas">
+    <div class="ph">
+      <div><h1>Metas</h1><p>Organize e conquiste seus objetivos.</p></div>
+      <button class="btn btn-primary" onclick="openModal('m-meta')">+ Nova meta</button>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><h2>Seus objetivos</h2></div>
+      <div id="metas-list"></div>
+    </div>
+  </div>
+
+  <!-- MOVIMENTOS -->
+  <div class="page" id="page-movimentos">
+    <div class="ph">
+      <div><h1>Movimentos</h1><p>Histórico de entradas e saídas.</p></div>
+      <button class="btn btn-primary" onclick="openModal('m-tx')">+ Lançar</button>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><h2>Histórico completo</h2></div>
+      <div id="tx-full"></div>
+    </div>
+  </div>
+
+</main>
+
+<nav class="tab-bar">
+  <button class="tab-btn active" onclick="goTo('visao')"><svg class="ti-svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="7" height="7" rx="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5"/></svg>Início</button>
+  <button class="tab-btn" onclick="goTo('bancos')"><svg class="ti-svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7.5L10 3l8 4.5"/><rect x="3" y="7.5" width="2.5" height="6"/><rect x="8.75" y="7.5" width="2.5" height="6"/><rect x="14.5" y="7.5" width="2.5" height="6"/><path d="M2 16.5h16"/></svg>Bancos</button>
+  <button class="tab-btn" onclick="goTo('projecoes')"><svg class="ti-svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,15 7,9 11,12 16,5"/><polyline points="13,5 16,5 16,8"/></svg>Projeções</button>
+  <button class="tab-btn" onclick="goTo('metas')"><svg class="ti-svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8"/><circle cx="10" cy="10" r="4"/><circle cx="10" cy="10" r="1.2" fill="currentColor" stroke="none"/></svg>Metas</button>
+  <button class="tab-btn" onclick="openModal('m-tx')"><svg class="ti-svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M10 4v12M4 10h12"/></svg>Lançar</button>
+</nav>
+
+<!-- MODAL: lançamento -->
+<div class="overlay" id="m-tx">
+  <div class="modal">
+    <button class="mcls" onclick="closeModal('m-tx')">×</button>
+    <h3 id="tx-modal-title">Novo lançamento</h3>
+    <div class="fg"><label>Tipo</label>
+      <select id="tx-tipo"><option value="entrada">💚 Entrada</option><option value="saida">🔴 Saída</option></select>
+    </div>
+    <div class="fg"><label>Descrição</label><input type="text" id="tx-desc" placeholder="Ex: Salário, Aluguel…"></div>
+    <div class="fg"><label>Valor (R$)</label><input type="number" id="tx-val" placeholder="0,00" step="0.01" min="0"></div>
+    <div class="fg"><label>Banco</label><select id="tx-banco"></select></div>
+    <div class="fg"><label>Data</label><input type="date" id="tx-data"></div>
+    <div class="ma">
+      <button class="btn btn-outline" onclick="closeModal('m-tx')">Cancelar</button>
+      <button class="btn btn-primary" id="tx-save-button" onclick="salvarTx()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: banco -->
+<div class="overlay" id="m-banco">
+  <div class="modal">
+    <button class="mcls" onclick="closeModal('m-banco')">×</button>
+    <h3 id="bank-modal-title">Novo banco / conta</h3>
+    <div class="fg"><label>Nome</label><input type="text" id="b-nome" placeholder="Ex: Nubank, Inter, Itaú…"></div>
+    <div class="fg"><label>Saldo atual (R$)</label><input type="number" id="b-saldo" placeholder="0,00" step="0.01" min="0"></div>
+    <div class="fg"><label>Rendimento CDI (% ao mês)</label><input type="number" id="b-cdi" placeholder="Ex: 0.8" step="0.01" min="0"></div>
+    <div class="fg"><label>Tipo</label>
+      <select id="b-tipo">
+        <option value="corrente">Conta corrente</option>
+        <option value="poupança">Poupança</option>
+        <option value="investimento">Investimento</option>
+        <option value="caixinha">Caixinha / Cofre</option>
+      </select>
+    </div>
+    <div class="ma">
+      <button class="btn btn-outline" onclick="closeModal('m-banco')">Cancelar</button>
+      <button class="btn btn-primary" id="bank-save-button" onclick="salvarBanco()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: meta -->
+<div class="overlay" id="m-meta">
+  <div class="modal">
+    <button class="mcls" onclick="closeModal('m-meta')">×</button>
+    <h3 id="meta-modal-title">Nova meta</h3>
+    <div class="fg"><label>Nome</label><input type="text" id="mt-nome" placeholder="Ex: Viagem, Notebook…"></div>
+    <div class="fg"><label>Valor total necessário (R$)</label><input type="number" id="mt-total" placeholder="0,00" step="0.01" min="0"></div>
+    <div class="fg"><label>Já guardei (R$)</label><input type="number" id="mt-atual" placeholder="0,00" step="0.01" min="0"></div>
+    <div class="fg"><label>Prazo</label><input type="month" id="mt-prazo"></div>
+    <div class="ma">
+      <button class="btn btn-outline" onclick="closeModal('m-meta')">Cancelar</button>
+      <button class="btn btn-primary" id="meta-save-button" onclick="salvarMeta()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Estado local. O armazenamento é automático neste navegador/dispositivo; use backup para transferir entre dispositivos.
+const S = { bancos: [], txs: [], metas: [] };
+let storageDB = null;
+let saveQueue = Promise.resolve();
+let editingBankId = null;
+let editingTxId = null;
+let editingMetaId = null;
+
+// Helpers
+const money = v => 'R$ ' + Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const pad = n => String(n).padStart(2, '0');
+const today = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; };
+const currentMonth = () => today().slice(0, 7);
+const monthKey = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}`;
+const parseMoney = value => {
+  let s = String(value ?? '').trim().replace(/\s/g, '').replace(/^R\$/i, '');
+  if (!s) return 0;
+  if (s.includes(',')) s = s.replace(/\./g, '').replace(',', '.');
+  const n = Number(s);
+  return Number.isFinite(n) ? n : NaN;
+};
+const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const fmtDate = value => { if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value || ''))) return 'Sem data'; const [y,m,d] = value.split('-'); return `${d}/${m}/${y}`; };
+const sortTxs = () => S.txs.sort((a,b) => String(b.data || '').localeCompare(String(a.data || '')) || String(b.criadoEm || '').localeCompare(String(a.criadoEm || '')));
+const setStatus = msg => { const el = document.getElementById('save-status'); if (el) el.textContent = msg; };
+
+function numberOrZero(v) { const n = Number(v); return Number.isFinite(n) ? n : 0; }
+function validId(value) { const s = String(value || ''); return /^[a-zA-Z0-9_-]{1,80}$/.test(s) ? s : uid(); }
+function normaliseState(raw) {
+  raw = raw && typeof raw === 'object' ? raw : {};
+  const srcBanks = Array.isArray(raw.bancos) ? raw.bancos : [];
+  const srcTxs = Array.isArray(raw.txs) ? raw.txs : [];
+  const srcMetas = Array.isArray(raw.metas) ? raw.metas : [];
+  const bankIds = new Map();
+  const seenBank = new Set();
+  const bancos = srcBanks.map(b => {
+    const oldId = String(b?.id || '');
+    let id = validId(oldId);
+    if (seenBank.has(id)) id = uid();
+    seenBank.add(id);
+    if (oldId) bankIds.set(oldId, id);
+    return { id, nome: String(b?.nome || 'Conta sem nome'), saldo: numberOrZero(b?.saldo), cdi: Math.max(0, numberOrZero(b?.cdi)), tipo: String(b?.tipo || 'corrente'), criadoEm: String(b?.criadoEm || today()) };
+  });
+  const usedTx = new Set();
+  const txs = srcTxs.map(t => {
+    let id = validId(t?.id);
+    if (usedTx.has(id)) id = uid();
+    usedTx.add(id);
+    const oldBankId = String(t?.bancoId || '');
+    return { id, tipo: t?.tipo === 'entrada' ? 'entrada' : 'saida', desc: String(t?.desc || 'Lançamento'), val: Math.abs(numberOrZero(t?.val)), bancoId: bankIds.get(oldBankId) || validId(oldBankId), bancoNome: String(t?.bancoNome || ''), data: /^\d{4}-\d{2}-\d{2}$/.test(String(t?.data || '')) ? t.data : today(), criadoEm: String(t?.criadoEm || '') };
+  });
+  const usedMeta = new Set();
+  const metas = srcMetas.map(m => {
+    let id = validId(m?.id);
+    if (usedMeta.has(id)) id = uid();
+    usedMeta.add(id);
+    return { id, nome: String(m?.nome || 'Meta sem nome'), total: Math.max(0, numberOrZero(m?.total)), atual: Math.max(0, numberOrZero(m?.atual)), prazo: String(m?.prazo || ''), criadoEm: String(m?.criadoEm || today()) };
+  });
+  return { bancos, txs, metas };
+}
+
+// IndexedDB com fallback para localStorage e migração do formato anterior.
+function openStorageDB() {
+  return new Promise((resolve, reject) => {
+    if (!('indexedDB' in window)) return reject(new Error('IndexedDB indisponível'));
+    let req;
+    try { req = window.indexedDB.open('minhas-financas-local', 1); } catch (err) { reject(err); return; }
+    const timer = setTimeout(() => reject(new Error('Tempo limite ao abrir o armazenamento')), 3000);
+    req.onupgradeneeded = () => { const db = req.result; if (!db.objectStoreNames.contains('dados')) db.createObjectStore('dados', { keyPath: 'key' }); };
+    req.onsuccess = () => { clearTimeout(timer); resolve(req.result); };
+    req.onerror = () => { clearTimeout(timer); reject(req.error || new Error('Não foi possível abrir o armazenamento')); };
+  });
+}
+function readIDB() {
+  return new Promise((resolve, reject) => {
+    if (!storageDB) return resolve(null);
+    let req;
+    try { req = storageDB.transaction('dados', 'readonly').objectStore('dados').get('principal'); }
+    catch (err) { reject(err); return; }
+    req.onsuccess = () => resolve(req.result?.value || null);
+    req.onerror = () => reject(req.error || new Error('Falha ao ler os dados'));
+  });
+}
+function writeIDB(value) {
+  return new Promise((resolve, reject) => {
+    if (!storageDB) return reject(new Error('IndexedDB indisponível'));
+    let req;
+    try { req = storageDB.transaction('dados', 'readwrite').objectStore('dados').put({ key: 'principal', value }); }
+    catch (err) { reject(err); return; }
+    req.onsuccess = () => resolve(true);
+    req.onerror = () => reject(req.error || new Error('Falha ao salvar os dados'));
+  });
+}
+function readLocalState() {
+  try {
+    const newer = localStorage.getItem('fin_state_v2');
+    if (newer) return { data: JSON.parse(newer), migrated: false };
+    const b = localStorage.getItem('fin_b');
+    const t = localStorage.getItem('fin_t');
+    const m = localStorage.getItem('fin_m');
+    if (b || t || m) return { data: { bancos: b ? JSON.parse(b) : [], txs: t ? JSON.parse(t) : [], metas: m ? JSON.parse(m) : [] }, migrated: true };
+  } catch (err) { console.warn('Não foi possível ler localStorage:', err); }
+  return { data: null, migrated: false };
+}
+async function setupDB() {
+  let loaded = null;
+  let loadedFromIDB = false;
+  try { storageDB = await openStorageDB(); loaded = await readIDB(); loadedFromIDB = !!loaded; } catch (err) { storageDB = null; }
+  if (!loaded) {
+    const local = readLocalState();
+    loaded = local.data;
+  }
+  const clean = normaliseState(loaded || {});
+  S.bancos = clean.bancos; S.txs = clean.txs; S.metas = clean.metas;
+  sortTxs();
+  renderAll();
+  // Se o estado veio do localStorage (inclusive versões anteriores), também migra para IndexedDB.
+  if (!loadedFromIDB) await persist();
+  else setStatus('Dados carregados neste dispositivo');
+}
+async function persist() {
+  const snapshot = JSON.stringify({ version: 2, bancos: S.bancos, txs: S.txs, metas: S.metas });
+  saveQueue = saveQueue.catch(() => {}).then(async () => {
+    let localOK = false, idbOK = false;
+    try {
+      localStorage.setItem('fin_state_v2', snapshot);
+      // Manter as chaves antigas também, para compatibilidade com o arquivo anterior.
+      localStorage.setItem('fin_b', JSON.stringify(S.bancos));
+      localStorage.setItem('fin_t', JSON.stringify(S.txs));
+      localStorage.setItem('fin_m', JSON.stringify(S.metas));
+      localOK = true;
+    } catch (err) { /* IndexedDB ainda pode salvar */ }
+    try { if (storageDB) { await writeIDB(JSON.parse(snapshot)); idbOK = true; } } catch (err) { /* usa o outro armazenamento */ }
+    if (localOK || idbOK) setStatus('✓ Dados salvos neste dispositivo');
+    else setStatus('⚠ Salvamento automático indisponível. Baixe um backup.');
+    return localOK || idbOK;
+  });
+  return saveQueue;
+}
+window.addEventListener('storage', async event => {
+  if (event.key === 'fin_state_v2' && event.newValue) {
+    try {
+      const clean = normaliseState(JSON.parse(event.newValue));
+      S.bancos = clean.bancos; S.txs = clean.txs; S.metas = clean.metas;
+      sortTxs(); renderAll(); setStatus('Dados atualizados em outra aba'); await persist();
+    } catch (err) { console.warn('Falha ao sincronizar outra aba:', err); }
+  }
+});
+
+function exportBackup() {
+  const backup = { app: 'Minhas Finanças', version: 2, exportadoEm: new Date().toISOString(), dados: { bancos: S.bancos, txs: S.txs, metas: S.metas } };
+  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `backup-minhas-financas-${today()}.json`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+  setStatus('Backup gerado. Guarde o arquivo em local seguro.');
+}
+function importBackup(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async () => {
+    try {
+      const parsed = JSON.parse(String(reader.result || '{}'));
+      const data = parsed.dados || parsed.state || parsed;
+      if (!data || !Array.isArray(data.bancos) || !Array.isArray(data.txs) || !Array.isArray(data.metas)) throw new Error('Formato inválido');
+      if (!confirm('Restaurar este backup vai substituir os dados que estão salvos neste dispositivo. Deseja continuar?')) return;
+      const clean = normaliseState(data);
+      S.bancos = clean.bancos; S.txs = clean.txs; S.metas = clean.metas;
+      sortTxs(); renderAll();
+      const saved = await persist();
+      alert(saved ? 'Backup restaurado com sucesso.' : 'Os dados foram carregados nesta sessão, mas o navegador não conseguiu salvá-los automaticamente. Baixe um novo backup.');
+    } catch (err) { alert('Não foi possível restaurar. Selecione um backup JSON válido do Minhas Finanças.'); }
+    finally { event.target.value = ''; }
+  };
+  reader.onerror = () => { alert('Não foi possível ler o arquivo selecionado.'); event.target.value = ''; };
+  reader.readAsText(file);
+}
+
+// Navegação e modais
+function goTo(page) {
+  const target = document.getElementById('page-' + page);
+  if (!target) return;
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-item,.tab-btn').forEach(el => el.classList.remove('active'));
+  target.classList.add('active');
+  document.querySelectorAll(`[onclick="goTo('${page}')"]`).forEach(el => el.classList.add('active'));
+  if (page === 'projecoes') renderProj();
+}
+function resetBankForm() {
+  ['b-nome','b-saldo','b-cdi'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('b-tipo').value = 'corrente';
+  document.getElementById('bank-modal-title').textContent = 'Novo banco / conta';
+  document.getElementById('bank-save-button').textContent = 'Salvar';
+  editingBankId = null;
+}
+function resetTxForm() {
+  document.getElementById('tx-tipo').value = 'entrada';
+  document.getElementById('tx-desc').value = '';
+  document.getElementById('tx-val').value = '';
+  document.getElementById('tx-data').value = today();
+  document.getElementById('tx-modal-title').textContent = 'Novo lançamento';
+  document.getElementById('tx-save-button').textContent = 'Salvar';
+  editingTxId = null;
+}
+function resetMetaForm() {
+  ['mt-nome','mt-total','mt-atual','mt-prazo'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('meta-modal-title').textContent = 'Nova meta';
+  document.getElementById('meta-save-button').textContent = 'Salvar';
+  editingMetaId = null;
+}
+function openModal(id) {
+  if (!document.getElementById(id)) return;
+  if (id === 'm-banco') resetBankForm();
+  if (id === 'm-meta') resetMetaForm();
+  if (id === 'm-tx') {
+    resetTxForm();
+    const sel = document.getElementById('tx-banco');
+    sel.innerHTML = S.bancos.length ? S.bancos.map(b => `<option value="${esc(b.id)}">${esc(b.nome)}</option>`).join('') : '<option value="">Cadastre um banco primeiro</option>';
+    sel.disabled = !S.bancos.length;
+  }
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) { document.getElementById(id)?.classList.remove('open'); }
+document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); }));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.overlay.open').forEach(o => o.classList.remove('open')); });
+
+// Bancos: criar, editar e excluir (a conta só pode ser removida sem movimentos vinculados).
+async function salvarBanco() {
+  const nome = document.getElementById('b-nome').value.trim();
+  const saldo = parseMoney(document.getElementById('b-saldo').value);
+  const cdi = parseMoney(document.getElementById('b-cdi').value || '0');
+  const tipo = document.getElementById('b-tipo').value;
+  if (!nome) return alert('Informe o nome do banco.');
+  if (!Number.isFinite(saldo) || saldo < 0 || !Number.isFinite(cdi) || cdi < 0) return alert('Informe valores válidos e não negativos para saldo e rendimento.');
+  const nov = { nome, saldo, cdi, tipo };
+  if (editingBankId) {
+    const bank = S.bancos.find(b => b.id === editingBankId);
+    if (!bank) return alert('Esta conta não foi encontrada.');
+    Object.assign(bank, nov);
+  } else {
+    S.bancos.push({ id: uid(), ...nov, criadoEm: today() });
+  }
+  const saved = await persist(); renderAll(); closeModal('m-banco'); resetBankForm();
+  if (!saved) alert('A conta foi atualizada nesta sessão, mas o navegador não conseguiu salvar os dados. Baixe um backup.');
+}
+function editarBanco(id) {
+  const b = S.bancos.find(x => x.id === id); if (!b) return alert('Conta não encontrada.');
+  openModal('m-banco'); editingBankId = id;
+  document.getElementById('b-nome').value = b.nome;
+  document.getElementById('b-saldo').value = b.saldo;
+  document.getElementById('b-cdi').value = b.cdi || 0;
+  document.getElementById('b-tipo').value = b.tipo || 'corrente';
+  document.getElementById('bank-modal-title').textContent = 'Editar banco / conta';
+  document.getElementById('bank-save-button').textContent = 'Salvar alterações';
+}
+async function excluirBanco(id) {
+  const b = S.bancos.find(x => x.id === id); if (!b) return;
+  if (S.txs.some(t => t.bancoId === id)) return alert('Esta conta tem lançamentos vinculados. Exclua ou ajuste esses lançamentos antes de remover a conta, para preservar a consistência do histórico.');
+  if (!confirm(`Excluir a conta “${b.nome}”? Esta ação não pode ser desfeita.`)) return;
+  S.bancos = S.bancos.filter(x => x.id !== id);
+  await persist(); renderAll();
+}
+
+// Movimentos: criação, edição e exclusão ajustam o saldo da conta correspondente.
+async function salvarTx() {
+  const tipo = document.getElementById('tx-tipo').value;
+  const desc = document.getElementById('tx-desc').value.trim();
+  const val = parseMoney(document.getElementById('tx-val').value);
+  const bancoId = document.getElementById('tx-banco').value;
+  const data = document.getElementById('tx-data').value;
+  if (!desc) return alert('Informe a descrição do lançamento.');
+  if (!Number.isFinite(val) || val <= 0) return alert('Informe um valor maior que zero.');
+  if (!bancoId) return alert('Cadastre um banco primeiro.');
+  if (!data || !/^\d{4}-\d{2}-\d{2}$/.test(data)) return alert('Informe uma data válida.');
+  const banco = S.bancos.find(b => b.id === bancoId);
+  if (!banco) return alert('Banco não encontrado.');
+  const old = editingTxId ? S.txs.find(t => t.id === editingTxId) : null;
+  if (editingTxId && !old) return alert('O lançamento que você estava editando não foi encontrado.');
+  const balances = new Map(S.bancos.map(b => [b.id, numberOrZero(b.saldo)]));
+  if (old) {
+    const oldBalance = balances.get(old.bancoId);
+    if (oldBalance !== undefined) balances.set(old.bancoId, oldBalance + (old.tipo === 'entrada' ? -numberOrZero(old.val) : numberOrZero(old.val)));
+  }
+  const before = balances.get(bancoId) ?? numberOrZero(banco.saldo);
+  const after = before + (tipo === 'entrada' ? val : -val);
+  if (tipo === 'saida' && after < -0.000001) return alert(`O saldo disponível em “${banco.nome}” não é suficiente para essa saída. Saldo após o lançamento: ${money(after)}.`);
+  balances.set(bancoId, after);
+  S.bancos.forEach(b => { if (balances.has(b.id)) b.saldo = balances.get(b.id); });
+  const txData = { tipo, desc, val, bancoId, bancoNome: banco.nome, data, criadoEm: old?.criadoEm || new Date().toISOString() };
+  if (old) Object.assign(old, txData);
+  else S.txs.push({ id: uid(), ...txData });
+  sortTxs();
+  const saved = await persist(); renderAll(); closeModal('m-tx'); resetTxForm();
+  if (!saved) alert('O lançamento foi atualizado nesta sessão, mas o navegador não conseguiu salvar os dados. Baixe um backup.');
+}
+function editarTx(id) {
+  const t = S.txs.find(x => x.id === id); if (!t) return alert('Lançamento não encontrado.');
+  openModal('m-tx'); editingTxId = id;
+  document.getElementById('tx-tipo').value = t.tipo;
+  document.getElementById('tx-desc').value = t.desc;
+  document.getElementById('tx-val').value = t.val;
+  document.getElementById('tx-data').value = t.data || today();
+  document.getElementById('tx-banco').value = t.bancoId;
+  document.getElementById('tx-modal-title').textContent = 'Editar lançamento';
+  document.getElementById('tx-save-button').textContent = 'Salvar alterações';
+}
+async function excluirTx(id) {
+  const t = S.txs.find(x => x.id === id); if (!t) return;
+  if (!confirm(`Excluir o lançamento “${t.desc}” de ${money(t.val)}? O saldo da conta será ajustado.`)) return;
+  const b = S.bancos.find(x => x.id === t.bancoId);
+  if (b) b.saldo = numberOrZero(b.saldo) + (t.tipo === 'entrada' ? -numberOrZero(t.val) : numberOrZero(t.val));
+  S.txs = S.txs.filter(x => x.id !== id);
+  await persist(); renderAll();
+}
+
+// Metas: criar, editar valor guardado e excluir.
+async function salvarMeta() {
+  const nome = document.getElementById('mt-nome').value.trim();
+  const total = parseMoney(document.getElementById('mt-total').value);
+  const atual = parseMoney(document.getElementById('mt-atual').value || '0');
+  const prazo = document.getElementById('mt-prazo').value;
+  if (!nome) return alert('Informe o nome da meta.');
+  if (!Number.isFinite(total) || total <= 0 || !Number.isFinite(atual) || atual < 0) return alert('Informe valores válidos. O valor total deve ser maior que zero e o valor guardado não pode ser negativo.');
+  const nov = { nome, total, atual, prazo };
+  if (editingMetaId) {
+    const meta = S.metas.find(m => m.id === editingMetaId); if (!meta) return alert('Meta não encontrada.');
+    Object.assign(meta, nov);
+  } else S.metas.push({ id: uid(), ...nov, criadoEm: today() });
+  await persist(); renderAll(); closeModal('m-meta'); resetMetaForm();
+}
+function editarMeta(id) {
+  const m = S.metas.find(x => x.id === id); if (!m) return alert('Meta não encontrada.');
+  openModal('m-meta'); editingMetaId = id;
+  document.getElementById('mt-nome').value = m.nome;
+  document.getElementById('mt-total').value = m.total;
+  document.getElementById('mt-atual').value = m.atual;
+  document.getElementById('mt-prazo').value = m.prazo || '';
+  document.getElementById('meta-modal-title').textContent = 'Editar meta';
+  document.getElementById('meta-save-button').textContent = 'Salvar alterações';
+}
+async function excluirMeta(id) {
+  const m = S.metas.find(x => x.id === id); if (!m) return;
+  if (!confirm(`Excluir a meta “${m.nome}”?`)) return;
+  S.metas = S.metas.filter(x => x.id !== id); await persist(); renderAll();
+}
+
+// Cálculos e renderização
+function calcTotals() {
+  const pat = S.bancos.reduce((a,b) => a + numberOrZero(b.saldo), 0);
+  const month = currentMonth();
+  const txMes = S.txs.filter(t => t.data && t.data.startsWith(month));
+  const ent = txMes.filter(t => t.tipo === 'entrada').reduce((a,t) => a + numberOrZero(t.val), 0);
+  const sai = txMes.filter(t => t.tipo === 'saida').reduce((a,t) => a + numberOrZero(t.val), 0);
+  const rend = S.bancos.reduce((a,b) => a + numberOrZero(b.saldo) * (numberOrZero(b.cdi) / 100), 0);
+  return { pat, ent, sai, sal: ent - sai, rend };
+}
+function renderAll() {
+  const t = calcTotals();
+  document.getElementById('h-pat').textContent = money(t.pat);
+  document.getElementById('h-in').textContent = money(t.ent);
+  document.getElementById('h-out').textContent = money(t.sai);
+  document.getElementById('h-sal').textContent = money(t.sal);
+  document.getElementById('s-bancos').textContent = S.bancos.length;
+  document.getElementById('s-rend').textContent = money(t.rend);
+  document.getElementById('s-metas').textContent = S.metas.length;
+  document.getElementById('s-poup').textContent = (t.ent > 0 ? Math.round((t.sal / t.ent) * 100) : 0) + '%';
+  renderBancos(); renderTxs(); renderMetas(); renderProj(); renderInsights(t);
+}
+function renderBancos() {
+  const grid = document.getElementById('banks-grid');
+  const bankSVG = '<svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7.5L10 3l8 4.5"/><rect x="3" y="7.5" width="2.5" height="6"/><rect x="8.75" y="7.5" width="2.5" height="6"/><rect x="14.5" y="7.5" width="2.5" height="6"/><path d="M2 16.5h16"/></svg>';
+  const addSVG = '<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 4v12M4 10h12"/></svg>';
+  grid.innerHTML = S.bancos.map(b => {
+    const rm = numberOrZero(b.saldo) * numberOrZero(b.cdi) / 100;
+    return `<div class="bc"><div class="badge">${esc(b.tipo)}</div><div class="bn" style="display:flex;align-items:center;gap:5px">${bankSVG} ${esc(b.nome)}</div><div class="ba">${money(b.saldo)}</div>${numberOrZero(b.cdi) > 0 ? `<div class="by">+${money(rm)}/mês · ${esc(b.cdi)}% a.m.</div>` : ''}<div class="bc-actions"><button class="mini-btn" onclick="editarBanco('${esc(b.id)}')">Editar</button><button class="mini-btn danger" onclick="excluirBanco('${esc(b.id)}')">Excluir</button></div></div>`;
+  }).join('') + `<div class="bc add" onclick="openModal('m-banco')">${addSVG}<span>Adicionar banco</span></div>`;
+  const total = S.bancos.reduce((a,b) => a + numberOrZero(b.saldo), 0);
+  const dist = document.getElementById('bank-dist');
+  if (!S.bancos.length) dist.innerHTML = '<div class="empty"><p>Nenhum banco cadastrado ainda.</p></div>';
+  else dist.innerHTML = S.bancos.map(b => {
+    const pct = total !== 0 ? numberOrZero(b.saldo) / total * 100 : 0;
+    return `<div class="dist-item"><div class="dist-row"><span class="dn">${esc(b.nome)}</span><span class="dv">${money(b.saldo)} · ${Number.isFinite(pct) ? pct.toFixed(1) : '0.0'}%</span></div><div class="pb"><div class="pf" style="width:${Math.max(0,Math.min(100,pct))}%"></div></div></div>`;
+  }).join('');
+  const yl = document.getElementById('yield-list');
+  if (yl) yl.innerHTML = !S.bancos.length ? '<div class="empty"><p>Nenhum banco cadastrado.</p></div>' : S.bancos.map(b => {
+    const rm = numberOrZero(b.saldo) * numberOrZero(b.cdi) / 100;
+    return `<div class="yt-item"><div class="txi-icon in">${bankSVG}</div><div class="yt-body"><div class="yn">${esc(b.nome)}</div><div class="ym">${esc(b.cdi)}% a.m. · ${money(b.saldo)}</div></div><div class="yt-right"><div class="v1">+${money(rm)}/mês</div><div class="v2">+${money(rm*12)}/ano</div></div></div>`;
+  }).join('');
+  const select = document.getElementById('tx-banco');
+  if (select && !document.getElementById('m-tx').classList.contains('open')) {
+    select.innerHTML = S.bancos.length ? S.bancos.map(b => `<option value="${esc(b.id)}">${esc(b.nome)}</option>`).join('') : '<option value="">Cadastre um banco primeiro</option>';
+    select.disabled = !S.bancos.length;
+  }
+}
+function renderTxs() {
+  sortTxs();
+  const upSVG = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12V4"/><path d="M4 7l4-4 4 4"/></svg>';
+  const downSVG = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4v8"/><path d="M4 9l4 4 4-4"/></svg>';
+  const renderList = (arr, actions = false) => !arr.length ? '<div class="empty"><p>Nenhum lançamento ainda.</p></div>' : arr.map(t => `<div class="txi"><div class="txi-icon ${t.tipo === 'entrada' ? 'in' : 'out'}">${t.tipo === 'entrada' ? upSVG : downSVG}</div><div class="txi-body"><div class="nm">${esc(t.desc)}</div><div class="mt">${esc(S.bancos.find(b => b.id === t.bancoId)?.nome || t.bancoNome || 'Conta removida')} · ${fmtDate(t.data)}</div></div><div class="txi-amt ${t.tipo === 'entrada' ? 'in' : 'out'}">${t.tipo === 'entrada' ? '+' : '-'}${money(t.val)}</div>${actions ? `<div class="tx-actions"><button class="mini-btn" onclick="editarTx('${esc(t.id)}')">Editar</button><button class="mini-btn danger" onclick="excluirTx('${esc(t.id)}')">Excluir</button></div>` : ''}</div>`).join('');
+  document.getElementById('tx-home').innerHTML = renderList(S.txs.slice(0,5));
+  document.getElementById('tx-full').innerHTML = renderList(S.txs, true);
+}
+function renderMetas() {
+  const el = document.getElementById('metas-list');
+  if (!S.metas.length) { el.innerHTML = '<div class="empty"><p>Nenhuma meta criada. Adicione sua primeira!</p></div>'; return; }
+  el.innerHTML = S.metas.map(m => {
+    const pct = m.total > 0 ? Math.min(100, numberOrZero(m.atual) / numberOrZero(m.total) * 100) : 0;
+    const falta = Math.max(0, numberOrZero(m.total) - numberOrZero(m.atual));
+    const cls = pct >= 100 ? 'g' : pct >= 50 ? 'a' : '';
+    return `<div class="gi"><div class="gi-h"><div style="flex:1;min-width:0"><div class="gi-name">${esc(m.nome)}</div><div class="gi-meta">${m.prazo ? 'Até ' + esc(m.prazo) + ' · ' : ''}Faltam ${money(falta)}</div><div class="gi-actions"><button class="mini-btn" onclick="editarMeta('${esc(m.id)}')">Editar</button><button class="mini-btn danger" onclick="excluirMeta('${esc(m.id)}')">Excluir</button></div></div><div class="gi-amt"><div class="cur">${money(m.atual)}</div><div class="tot">de ${money(m.total)}</div></div></div><div class="pb"><div class="pf ${cls}" style="width:${Math.max(0,pct)}%"></div></div></div>`;
+  }).join('');
+}
+function renderProj() {
+  const c = document.getElementById('chart'); if (!c) return;
+  const now = new Date(); const meses = [];
+  for (let i = 5; i >= 0; i--) { const d = new Date(now.getFullYear(), now.getMonth()-i, 1); meses.push({ key: monthKey(d), lbl: d.toLocaleString('pt-BR',{month:'short'}).replace('.','') }); }
+  const vals = meses.map(m => S.txs.filter(t => t.data && t.data.startsWith(m.key) && t.tipo === 'entrada').reduce((a,t) => a + numberOrZero(t.val), 0));
+  const sampleVals = vals.slice(-3);
+  const validVals = sampleVals.filter(v => v > 0);
+  const avg = validVals.length ? validVals.reduce((a,b) => a+b,0) / validVals.length : 0;
+  const next = new Date(now.getFullYear(), now.getMonth()+1, 1);
+  meses.push({ key: monthKey(next), lbl: next.toLocaleString('pt-BR',{month:'short'}).replace('.',''), projected:true, value:avg });
+  const allVals = vals.concat([avg]); const maxV = Math.max(...allVals, 1);
+  c.innerHTML = meses.map((m,i) => {
+    const v = m.projected ? m.value : vals[i];
+    const h = Math.max(0, v/maxV*100);
+    return `<div class="bar-col"><div class="bar-w"><div class="bar ${m.projected ? 'proj' : 'real'}" style="height:${h}%" title="${m.projected ? 'Projeção: ' : ''}${money(v)}"></div></div><div class="bar-lbl">${esc(m.lbl)}${m.projected ? '*' : ''}</div></div>`;
+  }).join('');
+}
+function renderInsights(t) {
+  const el = document.getElementById('ai-home');
+  if (!S.bancos.length) el.innerHTML = '<div class="ai-txt">Comece cadastrando suas contas com o saldo atual. Depois, registre entradas e saídas para acompanhar seu fluxo financeiro.</div>';
+  else if (!S.txs.length) el.innerHTML = `<div class="ai-txt">Seu patrimônio registrado é de ${money(t.pat)}. Registre seus movimentos para acompanhar quanto entra e sai por mês.</div>`;
+  else if (t.sal < 0) el.innerHTML = `<div class="ai-txt">Neste mês, as saídas superam as entradas em ${money(Math.abs(t.sal))}. Vale conferir os gastos registrados e priorizar as despesas essenciais.</div>`;
+  else if (t.ent > 0) {
+    const rate = Math.round(t.sal/t.ent*100);
+    el.innerHTML = `<div class="ai-txt">Neste mês, seu saldo entre entradas e saídas é de ${money(t.sal)} (${rate}% das entradas). O rendimento mensal informado para suas contas está estimado em ${money(t.rend)}; confira as taxas cadastradas para manter a projeção atualizada.</div>`;
+  } else el.innerHTML = '<div class="ai-txt">Registre as entradas deste mês para que o painel calcule seu saldo mensal e sua taxa de poupança.</div>';
+  const projEl = document.getElementById('ai-proj');
+  if (projEl) {
+    const positive = S.bancos.filter(b => numberOrZero(b.saldo) > 0 && numberOrZero(b.cdi) > 0);
+    if (!positive.length) projEl.innerHTML = '<div class="ai-txt">Cadastre o saldo e a taxa mensal estimada de cada conta ou investimento para visualizar uma projeção de rendimento. A projeção não é uma promessa de retorno.</div>';
+    else {
+      const best = positive.reduce((a,b) => numberOrZero(b.cdi) > numberOrZero(a.cdi) ? b : a);
+      projEl.innerHTML = `<div class="ai-txt">Entre as contas cadastradas, “${esc(best.nome)}” tem a maior taxa mensal informada (${esc(best.cdi)}%). O cálculo é uma estimativa simples sobre o saldo atual, sem considerar impostos, taxas, variações ou juros compostos.</div>`;
+    }
+  }
+}
+
+// Inicialização
+(async function init() {
+  document.getElementById('tx-data').value = today();
+  await setupDB();
+})();
+</script>
+</body>
+</html>
